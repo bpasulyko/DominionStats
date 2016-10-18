@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.altuser.dominionstats.LogGame"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Select Date"
+        android:id="@+id/gameDate"
+        android:onClick="showDatePicker"
+        android:layout_margin="15dp"
+        android:textSize="16dp" />
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="166dp"
+        android:id="@+id/gameOptions"
+        android:layout_weight="0.11"
+        android:choiceMode="singleChoice" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Expansions Selected"
+        android:id="@+id/selectedExpansions"
+        android:layout_margin="20dp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Players Selected"
+        android:id="@+id/selectedPlayers"
+        android:layout_margin="20dp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Winner Selected"
+        android:id="@+id/winner"
+        android:layout_margin="20dp"
+        android:textStyle="italic" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:text="@string/log_game_string"
+        android:id="@+id/button"
+        android:onClick="logGame"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="10dp" />
+
+</LinearLayout>

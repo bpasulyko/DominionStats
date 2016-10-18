@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Dominion Stats</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_log_game">Log Game</string>
+    <string name="log_game_string">Log Game</string>
+    <string name="add_player_string">Add Player</string>
+    <string name="view_stats_string">View Stats</string>
+    <string name="title_activity_player_stats">Player Statistics</string>
+    <string name="player_name">Player Name</string>
+    <string name="button_add">Add</string>
+    <string name="title_activity_player_list">Choose a Player</string>
+
+    <!-- Player Stats -->
+    <string name="delete_player_string">Delete Player</string>
+    <string name="games_won_string">Games Won</string>
+    <string name="games_played_string">Games Played</string>
+    <string name="win_ratio_string">Win Ratio</string>
+    <string name="last_win_string">Last Win</string>
+    <string name="best_exp_string">Best Expansion</string>
+
+    <!-- Log Game -->
+    <string name="expansions_string">Expansions</string>
+    <string name="title_activity_database_viewer">DatabaseViewer</string>
+    <string name="hello_world">Hello world!</string>
+
+</resources>
