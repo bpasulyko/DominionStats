@@ -32,7 +32,7 @@ public class GameList extends Activity {
         List<Game> games = dbHandler.getGames();
 
         ListView lv = new ListView(this);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, games);
+        ArrayAdapter<Game> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, games);
         lv.setAdapter(adapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

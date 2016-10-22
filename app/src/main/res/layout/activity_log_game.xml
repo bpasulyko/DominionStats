@@ -18,34 +18,10 @@
 
     <ListView
         android:layout_width="fill_parent"
-        android:layout_height="166dp"
         android:id="@+id/gameOptions"
         android:layout_weight="0.11"
-        android:choiceMode="singleChoice" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No Expansions Selected"
-        android:id="@+id/selectedExpansions"
-        android:layout_margin="20dp"
-        android:textStyle="italic" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No Players Selected"
-        android:id="@+id/selectedPlayers"
-        android:layout_margin="20dp"
-        android:textStyle="italic" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No Winner Selected"
-        android:id="@+id/winner"
-        android:layout_margin="20dp"
-        android:textStyle="italic" />
+        android:choiceMode="singleChoice"
+        android:layout_height="175dp" />
 
     <Button
         android:layout_width="fill_parent"

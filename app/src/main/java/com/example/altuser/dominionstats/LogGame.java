@@ -2,10 +2,8 @@ package com.example.altuser.dominionstats;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
@@ -13,8 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.altuser.dominionstats.dbHandlers.MainDbHandler;
@@ -23,29 +21,33 @@ import com.example.altuser.dominionstats.models.Game;
 import com.example.altuser.dominionstats.models.Player;
 
 import java.text.DateFormat;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 public class LogGame extends Activity {
 
+    public static final String WINNER = "Winner";
+    public static final String EXPANSIONS = "Expansions";
+    public static final String PLAYERS = "Players";
+    public static final String NONE_SELECTED = "None selected";
+    public static final String TITLE = "title";
+    public static final String SUBTITLE = "subtitle";
     private MainDbHandler dbHandler;
 
     private ArrayAdapter dialogAdapter;
     private ListView dialogListView;
 
-    private ArrayAdapter<String> gameOptionsAdapter;
-    private ListView gameOptionsListView;
-
-    private List<Expansion> expansionList;
-    private List<Player> playerList;
-
     private List<Expansion> selectedExpansions = new ArrayList<>();
     private List<Player> selectedPlayers = new ArrayList<>();
     private Player winner;
+
+    ListView gameOptionsListView;
+
+    Map<String, Map<String, String>> titles = new HashMap<>();
 
 //    private DatePickerDialog datePickerDialog;
 //    private Date selectedDate = new Date();
@@ -58,35 +60,29 @@ public class LogGame extends Activity {
         //setDateTimeField();
         TextView gameDate = (TextView) findViewById(R.id.gameDate);
         gameDate.setText(DateFormat.getDateInstance().format(new Date()));
-
-        final List<String> titles = new ArrayList<>();
-        titles.add("Expansions");
-        titles.add("Players");
-        titles.add("Winner");
+        populateTitles();
 
         dbHandler = new MainDbHandler(this, null, null, 1);
-        expansionList = dbHandler.getExpansions();
-        playerList = dbHandler.getPlayers();
+        final List<Expansion> expansionList = dbHandler.getExpansions();
+        final List<Player> playerList = dbHandler.getPlayers();
 
         gameOptionsListView = (ListView) findViewById(R.id.gameOptions);
-        gameOptionsAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1,  titles);
-        gameOptionsListView.setAdapter(gameOptionsAdapter);
+        gameOptionsListView.setAdapter(createListAdapter(Arrays.asList(titles.get(EXPANSIONS), titles.get(PLAYERS), titles.get(WINNER))));
         gameOptionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String title = titles.get(position);
-                int choiceModeSingle = title.equals("Winner") ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_MULTIPLE;
+                String title = ((TextView) (view.findViewById(android.R.id.text1))).getText().toString();
+                int choiceModeSingle = title.equals(WINNER) ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_MULTIPLE;
                 switch (title) {
-                    case "Expansions" :
+                    case EXPANSIONS:
                         dialogAdapter = new ArrayAdapter<>(LogGame.this,
                                 android.R.layout.simple_list_item_multiple_choice, expansionList);
                         break;
-                    case "Players" :
+                    case PLAYERS:
                         dialogAdapter = new ArrayAdapter<>(LogGame.this,
                                 android.R.layout.simple_list_item_multiple_choice, playerList);
                         break;
-                    case "Winner" :
+                    case WINNER:
                         dialogAdapter = new ArrayAdapter<>(LogGame.this,
                                 android.R.layout.simple_list_item_single_choice, selectedPlayers);
                         break;
@@ -97,6 +93,29 @@ public class LogGame extends Activity {
                 buildListDialog(view, title, choiceModeSingle);
             }
         });
+    }
+
+    private void populateTitles() {
+        titles.put(EXPANSIONS, new HashMap<String, String>() {{
+            put(TITLE, EXPANSIONS);
+            put(SUBTITLE, NONE_SELECTED);
+        }});
+        titles.put(PLAYERS, new HashMap<String, String>() {{
+            put(TITLE, PLAYERS);
+            put(SUBTITLE, NONE_SELECTED);
+        }});
+        titles.put(WINNER, new HashMap<String, String>() {{
+            put(TITLE, WINNER);
+            put(SUBTITLE, NONE_SELECTED);
+        }});
+    }
+
+    private SimpleAdapter createListAdapter(List<Map<String, String>> list) {
+        final String[] fromMapKey = new String[] {TITLE, SUBTITLE};
+        final int[] toLayoutId = new int[] {android.R.id.text1, android.R.id.text2};
+        return new SimpleAdapter(this, list,
+                android.R.layout.simple_list_item_2,
+                fromMapKey, toLayoutId);
     }
 
     public void showDatePicker(View view) {
@@ -162,27 +181,35 @@ public class LogGame extends Activity {
 
     public void recordListSelection(View v, String title) {
         switch (title) {
-            case "Expansions" :
+            case EXPANSIONS:
                 selectedExpansions = getSelectedExpansions();
-                TextView selectedExpensionsTextView = (TextView) findViewById(R.id.selectedExpansions);
-                selectedExpensionsTextView.setText(selectedExpansions.toString());
-                selectedExpensionsTextView.setTypeface(null, Typeface.NORMAL);
+                titles.put(title, new HashMap<String, String>() {{
+                    put(TITLE, EXPANSIONS);
+                    put(SUBTITLE, selectedExpansions.toString());
+                }});
                 break;
-            case "Players" :
+            case PLAYERS:
                 selectedPlayers = getSelectedPlayers();
-                TextView selectedPlayersTextView = (TextView) findViewById(R.id.selectedPlayers);
-                selectedPlayersTextView.setText(selectedPlayers.toString());
-                selectedPlayersTextView.setTypeface(null, Typeface.NORMAL);
+                winner = null;
+                titles.put(title, new HashMap<String, String>() {{
+                    put(TITLE, PLAYERS);
+                    put(SUBTITLE, selectedPlayers.toString());
+                }});
+                titles.put(WINNER, new HashMap<String, String>() {{
+                    put(TITLE, WINNER);
+                    put(SUBTITLE, NONE_SELECTED);
+                }});
                 break;
-            case "Winner" :
+            case WINNER:
                 winner = getSelectedPlayers().get(0);
-                TextView winnerTextView = (TextView) findViewById(R.id.winner);
-                winnerTextView.setText(winner.getPlayerName());
-                winnerTextView.setTypeface(null, Typeface.NORMAL);
-                break;
+                titles.put(title, new HashMap<String, String>() {{
+                    put(TITLE, WINNER);
+                    put(SUBTITLE, winner.getPlayerName());
+                }});
             default :
                 break;
         }
+        gameOptionsListView.setAdapter(createListAdapter(Arrays.asList(titles.get(EXPANSIONS), titles.get(PLAYERS), titles.get(WINNER))));
     }
 
     private List<Expansion> getSelectedExpansions() {
